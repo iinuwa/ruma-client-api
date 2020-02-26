@@ -1,5 +1,6 @@
 //! [GET /_matrix/client/r0/rooms/{roomId}/context/{eventId}](https://matrix.org/docs/spec/client_server/r0.4.0.html#get-matrix-client-r0-rooms-roomid-context-eventid)
 
+use js_int::UInt;
 use ruma_api::ruma_api;
 use ruma_events::{collections::only, EventResult};
 use ruma_identifiers::{EventId, RoomId};
@@ -22,7 +23,8 @@ ruma_api! {
         ///
         /// Defaults to 10 if not supplied.
         #[ruma_api(query)]
-        pub limit: u8,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        pub limit: Option<UInt>,
         /// The room to get events from.
         #[ruma_api(path)]
         pub room_id: RoomId,

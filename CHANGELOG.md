@@ -20,6 +20,7 @@ Breaking changes:
   to allow invitation of users by either Matrix or third party identifiers.
 * Remove deprecated endpoint `r0::contact::create_contact` (deprecated in r0.6.0)
 * Add lazy-loading options to `r0::filter::RoomEventFilter` (introduced in r0.5.0)
+* Change type for `limit` request parameter of `r0::context::get_context` from `u8` to `Option<js_int::UInt>`
 
 # 0.6.0
 
