@@ -64,6 +64,9 @@ pub struct RoomEventFilter {
     /// If this item is absent then all event types are included.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub contains_url: Option<bool>,
+    /// Options to control lazy-loading of membership events.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lazy_load_options: Option<LazyLoadOptions>,
 }
 
 impl RoomEventFilter {
@@ -202,4 +205,17 @@ impl FilterDefinition {
             ..Default::default()
         }
     }
+}
+
+/// Specifies options for [lazy-loading membership events][lazy-loading] on
+/// supported endpoints
+///
+/// [lazy-loading]: https://matrix.org/docs/spec/client_server/r0.6.0#lazy-loading-room-members
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
+pub struct LazyLoadOptions {
+    /// Enables lazy-loading of events.
+    pub lazy_load_members: bool,
+    /// If `true`, sends all membership events for all events, even if they have
+    /// already been sent to the client. Defaults to `false`.
+    pub include_redundant_members: Option<bool>,
 }
