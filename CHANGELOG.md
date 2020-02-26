@@ -8,6 +8,7 @@ Improvements:
 * Add endpoints to retrieve account_data (introduced in r0.5.0)
 * Add media endpoints: `r0::media::{get_media_config, get_media_preview, get_content_as_filename}`
 * Add `unstable_features` to `unversioned::get_supported_versions` (introduced in r0.5.0)
+* Add `filter` type for `r0::context::get_context`
 
 Breaking changes:
 

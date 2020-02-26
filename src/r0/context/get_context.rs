@@ -5,6 +5,8 @@ use ruma_api::ruma_api;
 use ruma_events::{collections::only, EventResult};
 use ruma_identifiers::{EventId, RoomId};
 
+use crate::r0::filter::RoomEventFilter;
+
 ruma_api! {
     metadata {
         description: "Get the events immediately preceding and following a given event.",
@@ -28,6 +30,10 @@ ruma_api! {
         /// The room to get events from.
         #[ruma_api(path)]
         pub room_id: RoomId,
+        /// A RoomEventFilter to filter returned events with.
+        #[serde(skip_serializing_if = "Option::is_none")]
+        #[ruma_api(query)]
+        pub filter: Option<RoomEventFilter>,
     }
 
     response {
