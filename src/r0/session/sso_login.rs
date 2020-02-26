@@ -17,12 +17,12 @@ ruma_api! {
         /// URL to which the homeserver should return the user after completing
         /// authentication with the SSO identity provider.
         #[ruma_api(query)]
-        redirect_url: String,
+        pub redirect_url: String,
     }
 
     response {
         /// Redirect URL to the SSO identity provider.
         #[ruma_api(header = LOCATION)]
-        location: String,
+        pub location: String,
     }
 }
