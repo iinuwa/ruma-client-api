@@ -265,6 +265,7 @@ struct LazyLoadOptionsVisitor;
 
 impl<'de> Visitor<'de> for LazyLoadOptionsVisitor {
     type Value = LazyLoadOptions;
+
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
         formatter.write_str("Lazy load options")
     }
@@ -298,7 +299,7 @@ impl<'de> Deserialize<'de> for LazyLoadOptions {
     where
         D: Deserializer<'de>,
     {
-        deserializer.deserialize_map(LazyLoadOptionsVisitor {})
+        deserializer.deserialize_map(LazyLoadOptionsVisitor)
     }
 }
 
