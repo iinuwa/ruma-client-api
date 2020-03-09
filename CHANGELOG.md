@@ -8,6 +8,8 @@ Improvements:
 * Add endpoints to retrieve account_data (introduced in r0.5.0)
 * Add media endpoints: `r0::media::{get_media_config, get_media_preview, get_content_as_filename}`
 * Add `unstable_features` to `unversioned::get_supported_versions` (introduced in r0.5.0)
+* Add request and response parameters for `r0::account::deactivate`
+* Add `r0::session::sso_login` (introduced in r0.5.0)
 * Add `filter` type for `r0::context::get_context`
 
 Breaking changes:
@@ -17,7 +19,7 @@ Breaking changes:
 * Add `allow_remote` parameter to `r0::media::get_content`
 * Add missing parameters for `r0::room::create_room`
 * Moved `r0::room::create_room::Invite3pid` to `r0::membership::Invite3pid`
-* Replaced `user_id` parameter of `r0::membership::invite_user` with `recipient` 
+* Replaced `user_id` parameter of `r0::membership::invite_user` with `recipient`
   to allow invitation of users by either Matrix or third party identifiers.
 * Remove deprecated endpoint `r0::contact::create_contact` (deprecated in r0.6.0)
 * Add lazy-loading options to `r0::filter::RoomEventFilter` (introduced in r0.5.0)
