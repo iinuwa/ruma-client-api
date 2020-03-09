@@ -237,8 +237,8 @@ impl Serialize for LazyLoadOptions {
         let mut state;
         match *self {
             Self::Enabled {
-                include_redundant_members,
-            } if include_redundant_members => {
+                include_redundant_members: true,
+            } => {
                 state = serializer.serialize_struct("LazyLoad", 2)?;
                 state.serialize_field("lazy_load_members", &true)?;
                 state.serialize_field("include_redundant_members", &true)?;
