@@ -241,9 +241,7 @@ impl Serialize for LazyLoadOptions {
             } if include_redundant_members => {
                 state = serializer.serialize_struct("LazyLoad", 2)?;
                 state.serialize_field("lazy_load_members", &true)?;
-                if include_redundant_members {
-                    state.serialize_field("include_redundant_members", &true)?;
-                }
+                state.serialize_field("include_redundant_members", &true)?;
             }
             Self::Enabled { .. } => {
                 state = serializer.serialize_struct("LazyLoad", 1)?;
@@ -277,27 +275,21 @@ impl<'de> Visitor<'de> for LazyLoadOptionsVisitor {
     {
         let mut lazy_load_members = false;
         let mut include_redundant_members = false;
-        while let Some((key, value)) = access.next_entry::<&str, bool>()? {
-            match key {
-                "lazy_load_members" => {
-                    if !value {
-                        return Ok(LazyLoadOptions::Disabled);
-                    }
-                    lazy_load_members = true;
-                }
-                "include_redundant_members" => {
-                    include_redundant_members = value;
-                }
-                _ => (),
+        while let Some((key, value)) = access.next_entry::<String, bool>()? {
+            match &*key {
+                "lazy_load_members" => lazy_load_members = value,
+                "include_redundant_members" => include_redundant_members = value,
+                _ => {}
             };
         }
 
-        if lazy_load_members {
-            return Ok(LazyLoadOptions::Enabled {
+        Ok(if lazy_load_members {
+            LazyLoadOptions::Enabled {
                 include_redundant_members,
-            });
-        }
-        Ok(LazyLoadOptions::Disabled)
+            }
+        } else {
+            LazyLoadOptions::Disabled
+        })
     }
 }
 
@@ -309,11 +301,13 @@ impl<'de> Deserialize<'de> for LazyLoadOptions {
         deserializer.deserialize_map(LazyLoadOptionsVisitor {})
     }
 }
+
 #[cfg(test)]
 mod tests {
     use serde_json::json;
 
     use super::LazyLoadOptions;
+
     #[test]
     fn test_serializing_disabled_lazy_load() {
         let lazy_load_options = LazyLoadOptions::Disabled;
@@ -327,7 +321,7 @@ mod tests {
         };
         assert_eq!(
             serde_json::to_value(lazy_load_options).unwrap(),
-            json!({"lazy_load_members": true})
+            json!({ "lazy_load_members": true })
         );
     }
 
@@ -338,15 +332,24 @@ mod tests {
         };
         assert_eq!(
             serde_json::to_value(lazy_load_options).unwrap(),
-            json!({"lazy_load_members": true, "include_redundant_members": true})
+            json!({ "lazy_load_members": true, "include_redundant_members": true })
         );
     }
 
     #[test]
     fn test_deserializing_no_lazy_load() {
-        let input = r#"{"include_redundant_members": true}"#;
+        let json = json!({});
         assert_eq!(
-            serde_json::from_str::<LazyLoadOptions>(input).unwrap(),
+            serde_json::from_value::<LazyLoadOptions>(json).unwrap(),
+            LazyLoadOptions::Disabled,
+        );
+    }
+
+    #[test]
+    fn test_deserializing_ignore_redundant_members_when_no_lazy_load() {
+        let json = json!({ "include_redundant_members": true });
+        assert_eq!(
+            serde_json::from_value::<LazyLoadOptions>(json).unwrap(),
             LazyLoadOptions::Disabled,
         );
     }
