@@ -261,7 +261,7 @@ impl Default for LazyLoadOptions {
     }
 }
 
-struct LazyLoadOptionsVisitor {}
+struct LazyLoadOptionsVisitor;
 
 impl<'de> Visitor<'de> for LazyLoadOptionsVisitor {
     type Value = LazyLoadOptions;
