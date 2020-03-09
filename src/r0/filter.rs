@@ -276,7 +276,7 @@ impl<'de> Visitor<'de> for LazyLoadOptionsVisitor {
         M: MapAccess<'de>,
     {
         let mut lazy_load_members = false;
-        let mut include_redundant_members: Option<bool> = Option::None;
+        let mut include_redundant_members = false;
         while let Some((key, value)) = access.next_entry::<&str, bool>()? {
             match key {
                 "lazy_load_members" => {
@@ -286,25 +286,16 @@ impl<'de> Visitor<'de> for LazyLoadOptionsVisitor {
                     lazy_load_members = true;
                 }
                 "include_redundant_members" => {
-                    include_redundant_members = Some(value);
+                    include_redundant_members = value;
                 }
                 _ => (),
             };
         }
 
         if lazy_load_members {
-            match include_redundant_members {
-                Some(include_redundant_members) => {
-                    return Ok(LazyLoadOptions::Enabled {
-                        include_redundant_members,
-                    });
-                }
-                None => {
-                    return Ok(LazyLoadOptions::Enabled {
-                        include_redundant_members: false,
-                    });
-                }
-            }
+            return Ok(LazyLoadOptions::Enabled {
+                include_redundant_members,
+            });
         }
         Ok(LazyLoadOptions::Disabled)
     }
