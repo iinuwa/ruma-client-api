@@ -1,4 +1,4 @@
-//! De/-serialization function for `Option<std::time::Duration>` objects represented as milliseconds.
+//! De-/serialization functions for `Option<std::time::Duration>` objects represented as milliseconds.
 //! Delegates to `js_int::UInt` to ensure integer size is within bounds.
 
 use std::{convert::TryFrom, time::Duration};
@@ -11,7 +11,7 @@ use serde::{
 
 /// Serializes a Duration to an integer representing seconds.
 /// Will fail if integer is greater than the maximum integer that can be
-/// represented by an f64.
+/// unambiguously represented by an f64.
 pub fn serialize<S>(duration: &Duration, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
@@ -24,7 +24,7 @@ where
 
 /// Deserializes an integer representing seconds into a Duration.
 /// Will fail if integer is greater than the maximum integer that can be
-/// represented by an f64.
+/// unambiguously represented by an f64.
 pub fn deserialize<'de, D>(deserializer: D) -> Result<Duration, D::Error>
 where
     D: Deserializer<'de>,
