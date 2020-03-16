@@ -12,6 +12,7 @@ use serde::{
 /// Serialize an Option<Duration>.
 /// Will fail if integer is greater than the maximum integer that can be
 /// unambiguously represented by an f64.
+#[allow(dead_code)]
 pub fn serialize<S>(opt_duration: &Option<Duration>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
@@ -25,6 +26,7 @@ where
 /// Deserializes an Option<Duration>.
 /// Will fail if integer is greater than the maximum integer that can be
 /// unambiguously represented by an f64.
+#[allow(dead_code)]
 pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Duration>, D::Error>
 where
     D: Deserializer<'de>,
