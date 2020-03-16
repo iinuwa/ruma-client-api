@@ -1,4 +1,4 @@
-//! De-/serialization function for `std::time::Duration` objects
+//! De-/serialization functions for `std::time::Duration` objects
 
 pub mod ms;
 pub mod opt_ms;
