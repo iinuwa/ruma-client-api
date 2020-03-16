@@ -16,15 +16,10 @@ pub fn serialize<S>(duration: &Duration, serializer: S) -> Result<S::Ok, S::Erro
 where
     S: Serializer,
 {
-    if let Ok(millis) = u64::try_from(duration.as_millis()) {
-        return match UInt::try_from(millis) {
-            Ok(uint) => uint.serialize(serializer),
-            Err(err) => Err(S::Error::custom(err)),
-        };
+    match UInt::try_from(duration.as_millis()) {
+        Ok(uint) => uint.serialize(serializer),
+        Err(err) => Err(S::Error::custom(err)),
     }
-    Err(S::Error::custom(String::from(
-        "Value too large to serialize",
-    )))
 }
 
 /// Deserializes a Duration struct.

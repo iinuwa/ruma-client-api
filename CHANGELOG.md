@@ -11,6 +11,7 @@ Improvements:
 * Add request and response parameters for `r0::account::deactivate`
 * Add `r0::session::sso_login` (introduced in r0.5.0)
 * Add `filter` type for `r0::context::get_context`
+* Update js_int to 0.1.3
 
 Breaking changes:
 
