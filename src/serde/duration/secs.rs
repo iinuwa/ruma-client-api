@@ -29,8 +29,7 @@ pub fn deserialize<'de, D>(deserializer: D) -> Result<Duration, D::Error>
 where
     D: Deserializer<'de>,
 {
-    let secs = u64::from(UInt::deserialize(deserializer)?);
-    Ok(Duration::from_secs(secs))
+    UInt::deserialize(deserializer).map(|secs| Duration::from_secs(secs.into()))
 }
 
 #[cfg(test)]

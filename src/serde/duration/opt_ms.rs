@@ -1,12 +1,12 @@
 //! De-/serialization functions for `Option<std::time::Duration>` objects represented as milliseconds.
 //! Delegates to `js_int::UInt` to ensure integer size is within bounds.
 
-use std::time::Duration;
+use std::{convert::TryFrom, time::Duration};
 
 use js_int::UInt;
 use serde::{
     de::{Deserialize, Deserializer},
-    ser::Serializer,
+    ser::{Error, Serialize, Serializer},
 };
 
 /// Serialize an Option<Duration>.
@@ -16,10 +16,13 @@ pub fn serialize<S>(opt_duration: &Option<Duration>, serializer: S) -> Result<S:
 where
     S: Serializer,
 {
-    if let Some(duration) = opt_duration {
-        return super::ms::serialize(duration, serializer);
+    match opt_duration {
+        Some(duration) => match UInt::try_from(duration.as_millis()) {
+            Ok(uint) => uint.serialize(serializer),
+            Err(err) => Err(S::Error::custom(err)),
+        },
+        None => serializer.serialize_none(),
     }
-    serializer.serialize_none()
 }
 
 /// Deserializes an Option<Duration>.
@@ -29,8 +32,9 @@ pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Duration>, D::Error
 where
     D: Deserializer<'de>,
 {
-    let millis = UInt::deserialize(deserializer)?;
-    Ok(Some(Duration::from_millis(millis.into())))
+    Ok(UInt::deserialize(deserializer)
+        .ok()
+        .map(|millis| Duration::from_millis(millis.into())))
 }
 
 #[cfg(test)]
