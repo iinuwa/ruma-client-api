@@ -32,8 +32,7 @@ pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Duration>, D::Error
 where
     D: Deserializer<'de>,
 {
-    Ok(UInt::deserialize(deserializer)
-        .ok()
+    Ok(Option::<UInt>::deserialize(deserializer)?
         .map(|millis| Duration::from_millis(millis.into())))
 }
 
